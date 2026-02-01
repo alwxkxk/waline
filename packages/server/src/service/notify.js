@@ -185,6 +185,7 @@ module.exports = class extends think.Service {
   }
 
   async qq(self, parent) {
+    think.logger.debug(`qq notify inter.`);
     const { QMSG_KEY, QQ_ID, SITE_NAME, SITE_URL, QMSG_HOST } = process.env;
 
     if (!QMSG_KEY) {
@@ -222,6 +223,8 @@ module.exports = class extends think.Service {
     const postBody = Object.keys(postBodyData)
       .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(postBodyData[key]))
       .join('&');
+
+    think.logger.debug(`qq notify QMSG_KEY: ${QMSG_KEY}, postBody: ${postBody}`);
 
     return fetch(`${qmsgHost}/send/${QMSG_KEY}`, {
       method: 'POST',

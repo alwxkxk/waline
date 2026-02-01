@@ -213,6 +213,7 @@ module.exports = class extends BaseRest {
     let parentComment;
     let parentUser;
 
+    think.logger.debug(`pid:${pid}`);
     if (pid) {
       parentComment = await this.modelInstance.select({ objectId: pid });
       parentComment = parentComment[0];
@@ -244,7 +245,10 @@ module.exports = class extends BaseRest {
         )
       : undefined;
 
+    think.logger.debug(`Comment status:${comment.status}`);
+
     if (comment.status !== 'spam') {
+      think.logger.debug(`Comment service ready notify.`);
       const notify = this.service('notify', this);
 
       await notify.run(

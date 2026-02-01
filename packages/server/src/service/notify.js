@@ -481,6 +481,11 @@ module.exports = class extends think.Service {
 
   async run(comment, parent, disableAuthorNotify = false) {
     const { AUTHOR_EMAIL, DISABLE_AUTHOR_NOTIFY } = process.env;
+
+    think.logger.debug(
+      `Notify Service Run:${comment}, ${disableAuthorNotify},${DISABLE_AUTHOR_NOTIFY}`,
+    );
+
     const { mailSubject, mailTemplate, mailSubjectAdmin, mailTemplateAdmin } = think.config();
     const AUTHOR = AUTHOR_EMAIL;
 
@@ -497,7 +502,9 @@ module.exports = class extends think.Service {
     const title = mailSubjectAdmin || 'MAIL_SUBJECT_ADMIN';
     const content = mailTemplateAdmin || 'MAIL_TEMPLATE_ADMIN';
 
+    think.logger.debug(`Notify Service isAuthorComment :${isAuthorComment}`);
     if (!DISABLE_AUTHOR_NOTIFY && !isAuthorComment && !disableAuthorNotify) {
+      think.logger.debug(`Notify Service inter notify.`);
       const wechat = await this.wechat({ title, content }, comment, parent);
       const qywxAmWechat = await this.qywxAmWechat({ title, content }, comment, parent);
       const qq = await this.qq(comment, parent);
